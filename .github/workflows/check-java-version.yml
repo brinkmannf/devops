@@ -13,7 +13,8 @@ jobs:
   install-check-java:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Set up Java version
         uses: actions/setup-java@v3.0.0

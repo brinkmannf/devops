@@ -1,0 +1,24 @@
+name: Check Java Version
+env:
+  JAVA_VERSION: '11'
+  DISTRIBUTION: zulu
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java version
+        uses: actions/setup-java@v3.0.0
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.DISTRIBUTION }}
+      - name: Check version
+        run: java --version

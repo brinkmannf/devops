@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  install:
+  install-check-java:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,4 +21,6 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.DISTRIBUTION }}
       - name: Check version
-        run: java --version
+        run: |
+          echo "Check java version"
+          java --version

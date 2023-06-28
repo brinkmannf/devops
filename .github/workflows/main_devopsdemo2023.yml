@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - develop
   workflow_dispatch:
 
 env:
@@ -15,8 +16,10 @@ env:
   JAVA_VERSION: '17' # set this to the java version to use
 
 jobs:
-  build-and-deploy:
+  build-and-deploy-prod:
     runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v2
@@ -38,6 +41,35 @@ jobs:
         with:
           app-name: 'devopsdemo2023'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ABD37CCAC56C454BB35504BB50183393 }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: '${{ env.PACKAGE_DIRECTORY }}'
+          respect-pom-xml: true
+
+  build-and-deploy-develop:
+    runs-on: ubuntu-latest
+    environment: develop
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 'Restore Project Dependencies Using Mvn'
+        shell: pwsh
+        run: |
+          pushd './${{ env.PACKAGE_DIRECTORY }}'
+          mvn clean package
+          popd
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: 'devopsdemo2023'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: '${{ env.PACKAGE_DIRECTORY }}'
           respect-pom-xml: true

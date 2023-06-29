@@ -16,7 +16,7 @@ public class HelloTest {
     @Test
     public void test() {
         Mono<Greeting> result = new Hello().apply(Mono.just(new User("foo")));
-        assertThat(result.block().getMessage()).isEqualTo("Hello, foo!\n Test 123!");
+        assertThat(result.block().getMessage()).isEqualTo("Hello, foo!\n");
     }
 
     @Test
@@ -40,6 +40,6 @@ public class HelloTest {
             }
         });
         handler.close();
-        assertThat(result.getMessage()).isEqualTo("Hello, foo!\n Test 123!");
+        assertThat(result.getMessage()).isEqualTo("Hello, foo!\n");
     }
 }

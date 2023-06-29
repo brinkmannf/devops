@@ -40,6 +40,6 @@ public class HelloTest {
             }
         });
         handler.close();
-        assertThat(result.getMessage()).isEqualTo("Hello, foo!\n");
+        assertThat(result.getMessage()).isEqualTo("Hello, foo!\n Test 123!");
     }
 }
